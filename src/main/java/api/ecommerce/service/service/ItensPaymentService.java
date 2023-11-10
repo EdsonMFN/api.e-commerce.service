@@ -45,30 +45,29 @@ public class ItensPaymentService {
 
             var store = product.getStore();
 
-            StoreDto storeDto = StoreDto
-                    .builder()
-                    .id(store.getId())
-                    .cnpj(store.getCnpj())
-                    .name(store.getName())
-                    .build();
+            StoreDto storeDto = StoreDto.builder()
+                                        .id(store.getId())
+                                        .cnpj(store.getCnpj())
+                                        .name(store.getName())
+                                        .build();
 
             ProductDto productDto = ProductDto.builder()
-                    .id(product.getId())
-                    .name(product.getName())
-                    .descriptyon(product.getDescription())
-                    .typeProduct(product.getTypeProduct())
-                    .price(product.getPrice())
-                    .qtItemStock(product.getQtItemStock())
-                    .discount(product.getDiscount())
-                    .store(storeDto)
-                    .build();
+                                            .id(product.getId())
+                                            .name(product.getName())
+                                            .descriptyon(product.getDescription())
+                                            .typeProduct(product.getTypeProduct())
+                                            .price(product.getPrice())
+                                            .qtItemStock(product.getQtItemStock())
+                                            .discount(product.getDiscount())
+                                            .store(storeDto)
+                                            .build();
 
             return ItensPaymentDto.builder()
-                    .id(itensPayment.getId())
-                    .product(productDto)
-                    .qtProduct(itensPayment.getQtProduct())
-                    .pricePay(itensPayment.getPricePay())
-                    .build();
+                                .id(itensPayment.getId())
+                                .product(productDto)
+                                .qtProduct(itensPayment.getQtProduct())
+                                .pricePay(itensPayment.getPricePay())
+                                .build();
 
         }catch (Exception ex){
             throw new HandlerError(ex.getMessage());
@@ -102,11 +101,11 @@ public class ItensPaymentService {
                                                     .build();
 
                 ItensPaymentDto itensPaymentDto = ItensPaymentDto.builder()
-                                        .id(itensPayment.getId())
-                                        .qtProduct(itensPayment.getQtProduct())
-                                        .product(productDto)
-                                        .pricePay(itensPayment.getPricePay())
-                                        .build();
+                                                                .id(itensPayment.getId())
+                                                                .qtProduct(itensPayment.getQtProduct())
+                                                                .product(productDto)
+                                                                .pricePay(itensPayment.getPricePay())
+                                                                .build();
 
 
                 itensPaymentDtos.add(itensPaymentDto);
