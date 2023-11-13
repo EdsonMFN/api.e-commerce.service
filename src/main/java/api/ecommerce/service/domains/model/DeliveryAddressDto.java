@@ -5,15 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ItensPaymentDto {
+public class DeliveryAddressDto {
 
     private Long id;
-    private ProductDto product;
-    private Integer qtProduct;
-    private double pricePay;
+    private String address;
+    private int number;
+    private String state;
+    private String district;
 }

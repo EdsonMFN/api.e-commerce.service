@@ -6,25 +6,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class StoreDto {
-
+public class OrderDto {
     private Long id;
-    private String name;
-    private String cnpj;
-    private List<ProductDto> productsDto;
-    private List<ClientDto> clientsDto;
+    private ClientDto client;
+    private PaymentDto payment;
+    private DeliveryAddressDto deliveryAddress;
+    private List<ItensPaymentDto> itensPayments;
+    private LocalDateTime dateOrder;
 
     private String msg;
-    private Boolean sucess;
 
-    public StoreDto(String msg) {
+    public OrderDto(String msg) {
         this.msg = msg;
     }
 }

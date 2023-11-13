@@ -22,10 +22,6 @@ public class  Payment {
     @Column(name = "id_payment")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_itens_ayment")
-    private ItensPayment itensPayment;
-
     @Column(name = "dt_pay_day",nullable = false)
     private LocalDate payday;
 
@@ -36,10 +32,6 @@ public class  Payment {
     @Enumerated(EnumType.STRING)
     @Column(name = "ds_status_payment",nullable = false)
     private DsStatusPayment dsStatusPayment;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_client")
-    private Client client;
 
     @Column(name = "pay_total",nullable = false)
     private double payTotal;

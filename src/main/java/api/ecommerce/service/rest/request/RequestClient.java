@@ -17,7 +17,6 @@ public class RequestClient {
     private String cpf;
     private Integer age;
     private LocalDate dateOfBirth;
-    private String address;
     private String tel;
     private String email;
     private List<ProductDto> productDto;

@@ -28,6 +28,7 @@ public class ClientService {
             Store store = storeRepository.findById(idStore)
                     .orElseThrow(() -> new HandlerEntityNotFoundException("Client not found com id " + idStore));
         try {
+
             Client client = new Client();
             client.setStore(store);
             client.setName(requestClient.getName());
@@ -35,7 +36,6 @@ public class ClientService {
             client.setCpf(requestClient.getCpf());
             client.setAge(requestClient.getAge());
             client.setDateOfBirth(requestClient.getDateOfBirth());
-            client.setAddress(requestClient.getAddress());
             client.setTel(requestClient.getTel());
             clientRepository.save(client);
 
@@ -64,7 +64,6 @@ public class ClientService {
                                                 .cpf(client.getCpf())
                                                 .age(client.getAge())
                                                 .dateOfbirth(client.getDateOfBirth())
-                                                .address(client.getAddress())
                                                 .tel(client.getTel())
                                                 .storeDto(storeDto)
                                                 .build();
@@ -86,7 +85,6 @@ public class ClientService {
                                 .cpf(client.getCpf())
                                 .age(client.getAge())
                                 .dateOfbirth(client.getDateOfBirth())
-                                .address(client.getAddress())
                                 .tel(client.getTel())
                                 .build();
         }catch (Exception ex){
@@ -102,7 +100,6 @@ public class ClientService {
             client.setCpf(requestClient.getCpf());
             client.setAge(requestClient.getAge());
             client.setDateOfBirth(requestClient.getDateOfBirth());
-            client.setAddress(requestClient.getAddress());
             client.setTel(requestClient.getTel());
             clientRepository.save(client);
 

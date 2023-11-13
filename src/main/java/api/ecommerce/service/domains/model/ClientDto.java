@@ -1,5 +1,6 @@
 package api.ecommerce.service.domains.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientDto {
 
     private Long id;
@@ -19,7 +21,6 @@ public class ClientDto {
     private String cpf;
     private Integer age;
     private LocalDate dateOfbirth;
-    private String address;
     private String tel;
     private String email;
     private List<ItensPaymentDto> itensPaymentDto;
