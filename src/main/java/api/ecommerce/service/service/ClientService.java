@@ -26,7 +26,7 @@ public class ClientService {
     public ClientDto createClient (RequestClient requestClient, Long idStore){
 
             Store store = storeRepository.findById(idStore)
-                    .orElseThrow(() -> new HandlerEntityNotFoundException("Client not found com id " + idStore));
+                    .orElseThrow(() -> new HandlerEntityNotFoundException("Store not found com id " + idStore));
         try {
 
             Client client = new Client();
@@ -36,10 +36,10 @@ public class ClientService {
             client.setCpf(requestClient.getCpf());
             client.setAge(requestClient.getAge());
             client.setDateOfBirth(requestClient.getDateOfBirth());
-            client.setTel(requestClient.getTel());
+            client.setTel(phoneNumberFormat(requestClient.getTel()));
             clientRepository.save(client);
 
-            return new ClientDto("Client update successfully");
+            return new ClientDto("Client create successfully");
         }catch (Exception ex){
             throw new HandlerError(ex.getMessage());
         }
@@ -100,7 +100,7 @@ public class ClientService {
             client.setCpf(requestClient.getCpf());
             client.setAge(requestClient.getAge());
             client.setDateOfBirth(requestClient.getDateOfBirth());
-            client.setTel(requestClient.getTel());
+            client.setTel(phoneNumberFormat(requestClient.getTel()));
             clientRepository.save(client);
 
             return new ClientDto("Client update successfully");
@@ -118,6 +118,19 @@ public class ClientService {
 
         }catch (Exception ex) {
             throw new HandlerError(ex.getMessage());
+        }
+    }
+    public String phoneNumberFormat(String phoneNumber) {
+
+        if (phoneNumber.length() >= 11 && phoneNumber.matches("\\d+")) {
+            String formattedNumber = String.format("(%s) %s-%s",
+                    phoneNumber.substring(0, 2),
+                    phoneNumber.substring(2, 6),
+                    phoneNumber.substring(6, 10));
+
+            return formattedNumber;
+        } else {
+            throw new HandlerError("Invalid phone number, enter numbers only!");
         }
     }
 }

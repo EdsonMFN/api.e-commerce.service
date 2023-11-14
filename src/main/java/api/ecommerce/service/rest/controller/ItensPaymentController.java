@@ -18,27 +18,27 @@ public class ItensPaymentController {
     private ItensPaymentService itensPaymentService;
 
     @PostMapping(value = "/product/{idProduct}")
-    public ResponseEntity<ItensPaymentDto> createBuy(@RequestBody RequestItensPayment requestItensPayment, @PathVariable Long idProduct){
+    public ResponseEntity<ItensPaymentDto> createItensPayment(@RequestBody RequestItensPayment requestItensPayment, @PathVariable Long idProduct){
         ItensPaymentDto itensPaymentDto = itensPaymentService.createBuy(requestItensPayment,idProduct);
         return ResponseEntity.status(HttpStatus.CREATED).body(itensPaymentDto);
     }
     @GetMapping
-    public ResponseEntity<List<ItensPaymentDto>> findAllProduct(){
+    public ResponseEntity<List<ItensPaymentDto>> findAllItensPayment(){
         List<ItensPaymentDto> itensPaymentDtos = itensPaymentService.findAllBuy();
         return ResponseEntity.status(HttpStatus.OK).body(itensPaymentDtos);
     }
     @GetMapping(value = "/{idItensPayment}")
-    public ResponseEntity<ItensPaymentDto> findByProduct(@PathVariable Long idItensPayment){
+    public ResponseEntity<ItensPaymentDto> findByItensPayment(@PathVariable Long idItensPayment){
         ItensPaymentDto itensPaymentDto = itensPaymentService.findByBuy(idItensPayment);
         return ResponseEntity.status(HttpStatus.OK).body(itensPaymentDto);
     }
     @PutMapping(value = "/{idItensPayment}/product/{idproduct}")
-    public ResponseEntity<ItensPaymentDto> updateProduct(@RequestBody RequestItensPayment requestItensPayment, @PathVariable Long idItensPayment,@PathVariable Long idProduct){
+    public ResponseEntity<ItensPaymentDto> updateItensPayment(@RequestBody RequestItensPayment requestItensPayment, @PathVariable Long idItensPayment,@PathVariable Long idProduct){
         ItensPaymentDto itensPaymentDto = itensPaymentService.updateBuy(requestItensPayment,idItensPayment,idProduct);
         return ResponseEntity.status(HttpStatus.CREATED).body(itensPaymentDto);
     }
     @DeleteMapping(value = "/{idItensPayment}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long idItensPayment){
+    public ResponseEntity<String> deleteItensPayment(@PathVariable Long idItensPayment){
         String buy = itensPaymentService.deleteBuy(idItensPayment);
         return ResponseEntity.status(HttpStatus.OK).body(buy);
     }

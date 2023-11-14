@@ -40,7 +40,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ItensPayment> itensPayments;
 
-    @Column(name = "qt_item_stock")
+    @Column(name = "qt_item_stock",nullable = false)
     private Integer qtItemStock;
 
     @Column(name = "discount")

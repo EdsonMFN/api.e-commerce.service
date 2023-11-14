@@ -38,16 +38,15 @@ public class ItensPaymentService {
                 .orElseThrow(() -> new HandlerEntityNotFoundException("Product not found com id " + idProduct));
         try {
             ItensPayment itensPayment = new ItensPayment();
-            itensPayment.setPricePay(requestItensPayment.getPricePay());
             itensPayment.setQtProduct(requestItensPayment.getQtProduct());
             itensPayment.setProduct(product);
+            itensPayment.setPricePay(pricePay(itensPayment.getQtProduct(), product.getPrice()));
             itensPaymentRepository.save(itensPayment);
 
             var store = product.getStore();
 
             StoreDto storeDto = StoreDto.builder()
                                         .id(store.getId())
-                                        .cnpj(store.getCnpj())
                                         .name(store.getName())
                                         .build();
 
@@ -57,7 +56,6 @@ public class ItensPaymentService {
                                             .descriptyon(product.getDescription())
                                             .typeProduct(product.getTypeProduct())
                                             .price(product.getPrice())
-                                            .qtItemStock(product.getQtItemStock())
                                             .discount(product.getDiscount())
                                             .store(storeDto)
                                             .build();
@@ -65,8 +63,8 @@ public class ItensPaymentService {
             return ItensPaymentDto.builder()
                                 .id(itensPayment.getId())
                                 .product(productDto)
-                                .qtProduct(itensPayment.getQtProduct())
-                                .pricePay(itensPayment.getPricePay())
+                                .qtProduct(productWithdrawal(itensPayment.getQtProduct(),product.getQtItemStock(),product))
+                                .pricePay(pricePay(itensPayment.getQtProduct(), product.getPrice()))
                                 .build();
 
         }catch (Exception ex){
@@ -77,7 +75,6 @@ public class ItensPaymentService {
         try {
             List<ItensPayment> itensPayments = itensPaymentRepository.findAll();
             List<ItensPaymentDto> itensPaymentDtos = new ArrayList<>();
-            List<ProductDto> productsDto = new ArrayList<>();
 
             itensPayments.forEach(itensPayment -> {
                 var product = itensPayment.getProduct();
@@ -208,6 +205,23 @@ public class ItensPaymentService {
         }catch (Exception ex) {
             throw new HandlerError(ex.getMessage());
         }
+    }
+    private Integer productWithdrawal(Integer qtProduct,Integer stock,Product product){
+
+        if (stock >= qtProduct){
+            int updateStock = stock - qtProduct;
+
+
+            product.setQtItemStock(updateStock);
+            productRepository.save(product);
+
+            return qtProduct;
+        }else {
+            throw new HandlerError("There are not enough products in stock");
+        }
+    }
+    private double pricePay(Integer qtProdut, double price){
+        return price * qtProdut;
     }
 
 }

@@ -22,22 +22,22 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientDto);
     }
     @GetMapping
-    public ResponseEntity<List<ClientDto>> findAllProduct(){
-        List<ClientDto> stores = clientService.findAllClient();
-        return ResponseEntity.status(HttpStatus.OK).body(stores);
+    public ResponseEntity<List<ClientDto>> findAllClient(){
+        List<ClientDto> clientDtos = clientService.findAllClient();
+        return ResponseEntity.status(HttpStatus.OK).body(clientDtos);
     }
     @GetMapping(value = "/{idClient}")
-    public ResponseEntity<ClientDto> findByProduct(@PathVariable Long idClient){
-        ClientDto store = clientService.findByClient(idClient);
-        return ResponseEntity.status(HttpStatus.OK).body(store);
+    public ResponseEntity<ClientDto> findByClient(@PathVariable Long idClient){
+        ClientDto client = clientService.findByClient(idClient);
+        return ResponseEntity.status(HttpStatus.OK).body(client);
     }
     @PutMapping(value = "/{idClient}")
-    public ResponseEntity<ClientDto> updateProduct(@RequestBody RequestClient requestClient, @PathVariable Long idClient){
-        ClientDto storeDto = clientService.updateClient(requestClient,idClient);
-        return ResponseEntity.status(HttpStatus.CREATED).body(storeDto);
+    public ResponseEntity<ClientDto> updateClient(@RequestBody RequestClient requestClient, @PathVariable Long idClient){
+        ClientDto clientDto = clientService.updateClient(requestClient,idClient);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientDto);
     }
     @DeleteMapping(value = "/{idClient}")
-    public ResponseEntity<ClientDto> deleteProduct(@PathVariable Long idClient){
+    public ResponseEntity<ClientDto> deleteClient(@PathVariable Long idClient){
         ClientDto client = clientService.deleteClient(idClient);
         return ResponseEntity.status(HttpStatus.OK).body(client);
     }

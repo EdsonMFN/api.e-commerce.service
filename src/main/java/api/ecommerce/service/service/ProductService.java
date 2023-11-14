@@ -31,7 +31,7 @@ public class ProductService {
             product.setName(requestProduct.getName());
             product.setDescription(requestProduct.getDescriptyon());
             product.setTypeProduct(requestProduct.getTypeProduct());
-            product.setPrice(requestProduct.getPrice());
+            product.setPrice(itemDiscount(requestProduct.getPrice(),requestProduct.getDiscount()));
             product.setDiscount(requestProduct.getDiscount());
             product.setQtItemStock(requestProduct.getQtItemStock());
             product.setStore(store);
@@ -42,13 +42,12 @@ public class ProductService {
                                         .cnpj(store.getCnpj())
                                         .name(store.getName())
                                         .build();
-
             return ProductDto.builder()
                             .id(product.getId())
                             .name(product.getName())
                             .descriptyon(product.getDescription())
                             .typeProduct(product.getTypeProduct())
-                            .price(itemDiscount(product.getPrice(),product.getDiscount()))
+                            .price(product.getPrice())
                             .qtItemStock(product.getQtItemStock())
                             .discount(product.getDiscount())
                             .store(storeDto)
