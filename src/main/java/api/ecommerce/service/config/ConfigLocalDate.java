@@ -1,36 +1,26 @@
-//package api.ecommerce.service.config;
-//
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-//
-//@Configuration
-//public class ConfigLocalDate implements WebMvcConfigurer {
+package api.ecommerce.service.config;
 
-//    @Override
-//    public void addFormatters(FormatterRegistry registry) {
-//        registry.addFormatter(localDateFormatter());
-//    }
-//
-//    @Bean
-//    public LocalDateFormatter localDateFormatter() {
-//        return new LocalDateFormatter("dd/MM/yyyy");
-//    }
-//
-//    public static class LocalDateFormatter implements org.springframework.format.Formatter<LocalDate> {
-//        private final DateTimeFormatter formatter;
-//
-//        public LocalDateFormatter(String dateFormat) {
-//            this.formatter = DateTimeFormatter.ofPattern(dateFormat);
-//        }
-//
-//        @Override
-//        public LocalDate parse(String text, java.util.Locale locale) {
-//            return LocalDate.parse(text, formatter);
-//        }
-//
-//        @Override
-//        public String print(LocalDate object, java.util.Locale locale) {
-//            return formatter.format(object);
-//        }
-//    }
-//}
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.time.format.DateTimeFormatter;
+
+@Configuration
+public class ConfigLocalDate {
+
+    private static final String datePattern = "dd/MM/yyyy";
+    private static final String dateTimePattern = "dd/MM/yyyy HH:mm:ss";
+
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer localDateCustomizer() {
+        return builder -> {
+            builder.simpleDateFormat(dateTimePattern);
+            builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(datePattern)));
+            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(dateTimePattern)));
+
+        };
+    }
+}

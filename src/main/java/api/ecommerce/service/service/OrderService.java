@@ -36,31 +36,7 @@ public class OrderService {
         var getPayment = requestOrder.getPayment();
         final double[] payTotal = {0};
 
-        requestOrder.getItensPayments()
-                .forEach(itensPaymentLambd -> {
-                    ItensPayment itensPayment = itensPaymentRepository.findById(itensPaymentLambd.getId())
-                            .orElseThrow(() -> new HandlerEntityNotFoundException("ItensPayment not found com id " + itensPaymentLambd.getId()));
 
-                    var product = itensPayment.getProduct();
-
-                    ProductDto productDto = ProductDto.builder()
-                                                        .name(product.getName())
-                                                        .typeProduct(product.getTypeProduct())
-                                                        .price(product.getPrice())
-                                                        .discount(product.getDiscount())
-                                                        .build();
-                    ItensPaymentDto itensPaymentDto =
-                            ItensPaymentDto.builder()
-                                            .id(itensPayment.getId())
-                                            .product(productDto)
-                                            .qtProduct(itensPayment.getQtProduct())
-                                            .pricePay(itensPayment.getPricePay())
-                                            .build();
-
-                    payTotal[0] += itensPayment.getPricePay();
-
-                    itensPaymentDtos.add(itensPaymentDto);
-                });
 
         Payment payment = new Payment();
         payment.setDsStatusPayment(getPayment.getDsStatusPayment());
@@ -82,6 +58,35 @@ public class OrderService {
         order.setPayment(payment);
         order.setDateOrder(LocalDateTime.now());
         orderRepository.save(order);
+
+        requestOrder.getItensPayments()
+                .forEach(itensPaymentLambd -> {
+                    ItensPayment itensPayment = itensPaymentRepository.findById(itensPaymentLambd.getId())
+                            .orElseThrow(() -> new HandlerEntityNotFoundException("ItensPayment not found com id " + itensPaymentLambd.getId()));
+
+                    var product = itensPayment.getProduct();
+
+                    ProductDto productDto = ProductDto.builder()
+                            .name(product.getName())
+                            .typeProduct(product.getTypeProduct())
+                            .price(product.getPrice())
+                            .discount(product.getDiscount())
+                            .build();
+                    ItensPaymentDto itensPaymentDto =
+                            ItensPaymentDto.builder()
+                                    .id(itensPayment.getId())
+                                    .product(productDto)
+                                    .qtProduct(itensPayment.getQtProduct())
+                                    .pricePay(itensPayment.getPricePay())
+                                    .build();
+
+                    payTotal[0] += itensPayment.getPricePay();
+
+                    itensPayment.setOrder(order);
+                    itensPaymentRepository.save(itensPayment);
+
+                    itensPaymentDtos.add(itensPaymentDto);
+                });
 
 
         DeliveryAddressDto deliveryAddressDto =
