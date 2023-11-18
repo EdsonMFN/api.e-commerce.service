@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "client")
@@ -45,4 +46,11 @@ public class Client{
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "id_store")
     private Store store;
+
+    @OneToMany(mappedBy = "client",cascade = CascadeType.ALL)
+    private List<Order> orders;
+
+    @OneToOne
+    @JoinColumn(name = "id_deliveryAddress")
+    private DeliveryAddress deliveryAddress;
 }

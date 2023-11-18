@@ -11,7 +11,7 @@ public class RequestProduct {
 
     private Long id;
     private String name;
-    private Integer price;
+    private Double price;
     private String descriptyon;
     private TypeProduct typeProduct;
     private Integer qtItemStock;

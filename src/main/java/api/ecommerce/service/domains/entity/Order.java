@@ -21,17 +21,13 @@ public class Order {
     @Column(name = "id_order")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_client")
     private Client client;
 
     @OneToOne
     @JoinColumn(name = "id_payment")
     private Payment payment;
-
-    @OneToOne
-    @JoinColumn(name = "id_deliveryAddress")
-    private DeliveryAddress deliveryAddress;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     private List<ItensPayment> itensPayments;

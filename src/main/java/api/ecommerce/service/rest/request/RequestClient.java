@@ -1,5 +1,6 @@
 package api.ecommerce.service.rest.request;
 
+import api.ecommerce.service.domains.entity.DeliveryAddress;
 import api.ecommerce.service.domains.model.ProductDto;
 import api.ecommerce.service.domains.model.StoreDto;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class RequestClient implements Serializable {
     private String name;
     private String cpf;
     private Integer age;
+    private DeliveryAddress deliveryAddress;
     private LocalDate dateOfBirth;
     private String tel;
     private String email;

@@ -22,7 +22,7 @@ public class PaymentDto {
     private LocalDate payday;
     private TpPayment tpPayment;
     private DsStatusPayment dsStatusPayment;
-    private double payTotal;
+    private Double payTotal;
 
     private String msg;
     private Boolean sucess;

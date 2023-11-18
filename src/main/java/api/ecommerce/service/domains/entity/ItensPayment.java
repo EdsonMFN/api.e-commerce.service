@@ -25,8 +25,8 @@ public class ItensPayment {
     @Column(name = "qt_product")
     private Integer qtProduct;
 
-    @Column(name = "price_pay")
-    private double pricePay;
+    @Column(name = "subtotal")
+    private Double subtotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_order")

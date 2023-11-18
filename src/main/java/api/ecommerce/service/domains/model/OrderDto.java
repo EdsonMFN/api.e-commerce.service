@@ -18,7 +18,6 @@ public class OrderDto {
     private Long id;
     private ClientDto client;
     private PaymentDto payment;
-    private DeliveryAddressDto deliveryAddress;
     private List<ItensPaymentDto> itensPayments;
     private LocalDateTime dateOrder;
 

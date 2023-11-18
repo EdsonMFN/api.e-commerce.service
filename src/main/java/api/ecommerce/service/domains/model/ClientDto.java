@@ -24,6 +24,7 @@ public class ClientDto implements Serializable {
     private String name;
     private String cpf;
     private Integer age;
+    private DeliveryAddressDto deliveryAddress;
     private LocalDate dateOfbirth;
     private String tel;
     private String email;

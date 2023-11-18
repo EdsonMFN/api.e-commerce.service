@@ -15,5 +15,6 @@ public class ItensPaymentDto {
     private Long id;
     private ProductDto product;
     private Integer qtProduct;
-    private double pricePay;
+
+    private Double subtotal;
 }

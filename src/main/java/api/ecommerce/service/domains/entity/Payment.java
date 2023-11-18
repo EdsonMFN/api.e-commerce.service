@@ -34,5 +34,5 @@ public class  Payment {
     private DsStatusPayment dsStatusPayment;
 
     @Column(name = "pay_total",nullable = false)
-    private double payTotal;
+    private Double payTotal;
 }
