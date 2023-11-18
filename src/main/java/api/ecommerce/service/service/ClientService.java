@@ -154,7 +154,7 @@ public class ClientService {
     }
     public String phoneNumberFormat(String phoneNumber) {
         if (phoneNumber.length() >= 11 && phoneNumber.matches("\\d+")) {
-            return String.format("(%s) %s-%s",
+            return String.format("(%s)%s-%s",
                     phoneNumber.substring(0, 2),
                     phoneNumber.substring(2, 6),
                     phoneNumber.substring(6, 10));

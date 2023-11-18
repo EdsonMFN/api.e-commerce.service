@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -20,24 +22,24 @@ public class OrderController {
         OrderDto response = orderService.createOrder(requestOrder,idClient);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-//    @GetMapping
-//    public ResponseEntity<List<OrderDto>> findAllOrder(){
-//        List<OrderDto> response = orderService.findAllOrder();
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
-//    @GetMapping(value = "/{idOrder}")
-//    public ResponseEntity<OrderDto> findByOrder(@PathVariable Long idOrder){
-//        OrderDto response = orderService.findByOrder(idOrder);
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
+    @GetMapping
+    public ResponseEntity<List<OrderDto>> findAllOrder(){
+        List<OrderDto> response = orderService.findAllOrder();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @GetMapping(value = "/{idOrder}")
+    public ResponseEntity<OrderDto> findByOrder(@PathVariable Long idOrder){
+        OrderDto response = orderService.findByOrder(idOrder);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 //    @PutMapping(value = "/{idClient}")
-//    public ResponseEntity<ClientDto> updateProduct(@RequestBody RequestClient requestClient, @PathVariable Long idClient){
-//        ClientDto storeDto = clientService.updateClient(requestClient,idClient);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(storeDto);
+//    public ResponseEntity<OrderDto> updateProduct(@RequestBody RequestClient requestClient, @PathVariable Long idClient){
+//        OrderDto response = orderService.(requestClient,idClient);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(response);
 //    }
-//    @DeleteMapping(value = "/{idClient}")
-//    public ResponseEntity<ClientDto> deleteProduct(@PathVariable Long idClient){
-//        ClientDto client = clientService.deleteClient(idClient);
-//        return ResponseEntity.status(HttpStatus.OK).body(client);
-//    }
+    @DeleteMapping(value = "/{idOrder}")
+    public ResponseEntity<OrderDto> deleteProduct(@PathVariable Long idOrder){
+        OrderDto response = orderService.deleteOrder(idOrder);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

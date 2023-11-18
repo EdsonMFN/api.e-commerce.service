@@ -48,14 +48,12 @@ public class OrderService {
         Order order = new Order();
         order.setClient(client);
         order.setDateOrder(LocalDateTime.now());
-        order = orderRepository.save(order);
+        Order finalOrder = orderRepository.save(order);
 
-
-        Order finalOrder = order;
         requestOrder.getItensPayments()
                 .forEach(itensPaymentLambd -> {
                     Product product = productRepository.findById(itensPaymentLambd.getProduct().getId())
-                        .orElseThrow(() -> new HandlerEntityNotFoundException("Product not found com id " + itensPaymentLambd.getProduct().getId()));
+                        .orElseThrow(() -> new HandlerEntityNotFoundException("Product not found with id " + itensPaymentLambd.getProduct().getId()));
 
                     ItensPayment itensPayment = new ItensPayment();
                     itensPayment.setQtProduct(itensPaymentLambd.getQtProduct());
@@ -74,7 +72,7 @@ public class OrderService {
                             ItensPaymentDto.builder()
                                     .id(itensPayment.getId())
                                     .product(productDto)
-                                    .qtProduct(itensPayment.getQtProduct())
+                                    .qtProduct(productWithdrawal(itensPayment.getQtProduct(),product.getQtItemStock(),product))
                                     .subtotal(itensPayment.getSubtotal())
                                     .build();
 
@@ -86,8 +84,8 @@ public class OrderService {
         payment.setPayTotal(payTotal.get());
         paymentRepository.save(payment);
 
-        order.setPayment(payment);
-        orderRepository.save(order);
+        finalOrder.setPayment(payment);
+        orderRepository.save(finalOrder);
 
         var deliveryAddress = client.getDeliveryAddress();
         DeliveryAddressDto deliveryAddressDto =
@@ -131,153 +129,165 @@ public class OrderService {
                         .payment(paymentDto)
                         .build();
     }
-//    public List<OrderDto> findAllOrder(){
-//        List<Order> orders = orderRepository.findAll();
-//        List<OrderDto> orderDtos = new ArrayList<>();
-//
-//        orders.forEach(order -> {
-//            List<ItensPaymentDto> itensPaymentDtos = new ArrayList<>();
-//
-//            var store = order.getClient().getStore();
-//            var deliveryAddress = order.getDeliveryAddress();
-//            var client = order.getClient();
-//            var payment = order.getPayment();
-//
-//            DeliveryAddressDto deliveryAddressDto =
-//                    DeliveryAddressDto.builder()
-//                                        .id(deliveryAddress.getId())
-//                                        .address(deliveryAddress.getAddress())
-//                                        .state(deliveryAddress.getState())
-//                                        .number(deliveryAddress.getNumber())
-//                                        .district(deliveryAddress.getDistrict())
-//                                        .build();
-//            StoreDto storeDto = StoreDto.builder()
-//                                        .id(store.getId())
-//                                        .cnpj(store.getCnpj())
-//                                        .name(store.getName())
-//                                        .build();
-//            ClientDto clientDto = ClientDto.builder()
-//                                            .id(client.getId())
-//                                            .name(client.getName())
-//                                            .email(client.getEmail())
-//                                            .cpf(client.getCpf())
-//                                            .age(client.getAge())
-//                                            .dateOfbirth(client.getDateOfBirth())
-//                                            .tel(client.getTel())
-//                                            .storeDto(storeDto)
-//                                            .build();
-//            PaymentDto paymentDto = PaymentDto.builder()
-//                                                .id(payment.getId())
-//                                                .payday(payment.getPayday())
-//                                                .tpPayment(payment.getTpPayment())
-//                                                .dsStatusPayment(payment.getDsStatusPayment())
-//                                                .payTotal(payment.getPayTotal())
-//                                                .build();
-//
-//                order.getItensPayments().forEach(itensPayment -> {
-//                    var product = itensPayment.getProduct();
-//                    if (product!=null){
-//                        ProductDto productDto = ProductDto.builder()
-//                                .id(product.getId())
-//                                .name(product.getName())
-//                                .typeProduct(product.getTypeProduct())
-//                                .price(product.getPrice())
-//                                .discount(product.getDiscount())
-//                                .build();
-//                        ItensPaymentDto itensPaymentDto =
-//                                ItensPaymentDto.builder()
-//                                        .id(itensPayment.getId())
-//                                        .product(productDto)
-//                                        .qtProduct(itensPayment.getQtProduct())
-//                                        .pricePay(itensPayment.getPricePay())
-//                                        .build();
-//                        itensPaymentDtos.add(itensPaymentDto);
-//                    }else {
-//                     throw new HandlerError("Product not found");
-//                    }
-//                });
-//            OrderDto orderDto = OrderDto.builder()
-//                                        .id(order.getId())
-//                                        .dateOrder(order.getDateOrder())
-//                                        .client(clientDto)
-//                                        .deliveryAddress(deliveryAddressDto)
-//                                        .itensPayments(itensPaymentDtos)
-//                                        .payment(paymentDto)
-//                                        .build();
-//            orderDtos.add(orderDto);
-//        });
-//        return orderDtos;
-//    }
-//
-//    public OrderDto findByOrder(Long idOrder) {
-//        Order order = orderRepository.findById(idOrder)
-//                .orElseThrow(() -> new HandlerEntityNotFoundException("ItensPayment not found com id " + idOrder));
-//        List<ItensPaymentDto> itensPaymentDtos = new ArrayList<>();
-//
-//        var store = order.getClient().getStore();
-//        var deliveryAddress = order.getDeliveryAddress();
-//        var client = order.getClient();
-//        var payment = order.getPayment();
-//
-//        order.getItensPayments().parallelStream().forEach(itensPayment -> {
-//            var product = itensPayment.getProduct();
-//            ProductDto productDto = ProductDto.builder()
-//                    .id(product.getId())
-//                    .name(product.getName())
-//                    .typeProduct(product.getTypeProduct())
-//                    .price(product.getPrice())
-//                    .discount(product.getDiscount())
-//                    .build();
-//
-//            ItensPaymentDto itensPaymentDto =
-//                    ItensPaymentDto.builder()
-//                            .id(itensPayment.getId())
-//                            .product(productDto)
-//                            .qtProduct(itensPayment.getQtProduct())
-//                            .pricePay(itensPayment.getPricePay())
-//                            .build();
-//
-//            itensPaymentDtos.add(itensPaymentDto);
-//        });
-//        DeliveryAddressDto deliveryAddressDto =
-//                DeliveryAddressDto.builder()
-//                                    .id(deliveryAddress.getId())
-//                                    .address(deliveryAddress.getAddress())
-//                                    .state(deliveryAddress.getState())
-//                                    .number(deliveryAddress.getNumber())
-//                                    .district(deliveryAddress.getDistrict())
-//                                    .build();
-//        StoreDto storeDto = StoreDto.builder()
-//                                    .id(store.getId())
-//                                    .cnpj(store.getCnpj())
-//                                    .name(store.getName())
-//                                    .build();
-//        ClientDto clientDto = ClientDto.builder()
-//                                        .id(client.getId())
-//                                        .name(client.getName())
-//                                        .email(client.getEmail())
-//                                        .cpf(client.getCpf())
-//                                        .age(client.getAge())
-//                                        .dateOfbirth(client.getDateOfBirth())
-//                                        .tel(client.getTel())
-//                                        .storeDto(storeDto)
-//                                        .build();
-//        PaymentDto paymentDto = PaymentDto.builder()
-//                                            .id(payment.getId())
-//                                            .payday(payment.getPayday())
-//                                            .tpPayment(payment.getTpPayment())
-//                                            .dsStatusPayment(payment.getDsStatusPayment())
-//                                            .payTotal(payment.getPayTotal())
-//                                            .build();
-//        return OrderDto.builder()
-//                        .id(order.getId())
-//                        .dateOrder(order.getDateOrder())
-//                        .client(clientDto)
-//                        .deliveryAddress(deliveryAddressDto)
-//                        .itensPayments(itensPaymentDtos)
-//                        .payment(paymentDto)
-//                        .build();
-//    }
+    public List<OrderDto> findAllOrder(){
+        List<Order> orders = orderRepository.findAll();
+        List<OrderDto> orderDtos = new ArrayList<>();
+
+        orders.forEach(order -> {
+            List<ItensPaymentDto> itensPaymentDtos = new ArrayList<>();
+
+            var store = order.getClient().getStore();
+            var deliveryAddress = order.getClient().getDeliveryAddress();
+            var client = order.getClient();
+            var payment = order.getPayment();
+
+            DeliveryAddressDto deliveryAddressDto =
+                    DeliveryAddressDto.builder()
+                                        .id(deliveryAddress.getId())
+                                        .address(deliveryAddress.getAddress())
+                                        .state(deliveryAddress.getState())
+                                        .number(deliveryAddress.getNumber())
+                                        .district(deliveryAddress.getDistrict())
+                                        .build();
+            StoreDto storeDto = StoreDto.builder()
+                                        .id(store.getId())
+                                        .cnpj(store.getCnpj())
+                                        .name(store.getName())
+                                        .build();
+            ClientDto clientDto = ClientDto.builder()
+                                            .id(client.getId())
+                                            .name(client.getName())
+                                            .email(client.getEmail())
+                                            .cpf(client.getCpf())
+                                            .age(client.getAge())
+                                            .dateOfbirth(client.getDateOfBirth())
+                                            .tel(client.getTel())
+                                            .deliveryAddress(deliveryAddressDto)
+                                            .storeDto(storeDto)
+                                            .build();
+            PaymentDto paymentDto = PaymentDto.builder()
+                                                .id(payment.getId())
+                                                .payday(payment.getPayday())
+                                                .tpPayment(payment.getTpPayment())
+                                                .dsStatusPayment(payment.getDsStatusPayment())
+                                                .payTotal(payment.getPayTotal())
+                                                .build();
+
+                order.getItensPayments().forEach(itensPayment -> {
+                    var product = itensPayment.getProduct();
+                    if (product != null){
+                        ProductDto productDto = ProductDto.builder()
+                                                            .id(product.getId())
+                                                            .name(product.getName())
+                                                            .typeProduct(product.getTypeProduct())
+                                                            .price(product.getPrice())
+                                                            .discount(product.getDiscount())
+                                                            .build();
+                        ItensPaymentDto itensPaymentDto =
+                                ItensPaymentDto.builder()
+                                                .id(itensPayment.getId())
+                                                .product(productDto)
+                                                .qtProduct(itensPayment.getQtProduct())
+                                                .subtotal(itensPayment.getSubtotal())
+                                                .build();
+                        itensPaymentDtos.add(itensPaymentDto);
+                    }else {
+                     throw new HandlerError("Product not found");
+                    }
+                });
+            OrderDto orderDto = OrderDto.builder()
+                                        .id(order.getId())
+                                        .dateOrder(order.getDateOrder())
+                                        .client(clientDto)
+                                        .itensPayments(itensPaymentDtos)
+                                        .payment(paymentDto)
+                                        .build();
+            orderDtos.add(orderDto);
+        });
+        return orderDtos;
+    }
+
+    public OrderDto findByOrder(Long idOrder) {
+        Order order = orderRepository.findById(idOrder)
+                .orElseThrow(() -> new HandlerEntityNotFoundException("Order not found with id " + idOrder));
+        List<ItensPaymentDto> itensPaymentDtos = new ArrayList<>();
+
+        var store = order.getClient().getStore();
+        var deliveryAddress = order.getClient().getDeliveryAddress();
+        var client = order.getClient();
+        var payment = order.getPayment();
+
+        order.getItensPayments().forEach(itensPayment -> {
+            var product = itensPayment.getProduct();
+            ProductDto productDto = ProductDto.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .typeProduct(product.getTypeProduct())
+                    .price(product.getPrice())
+                    .discount(product.getDiscount())
+                    .build();
+
+            ItensPaymentDto itensPaymentDto =
+                    ItensPaymentDto.builder()
+                            .id(itensPayment.getId())
+                            .product(productDto)
+                            .qtProduct(itensPayment.getQtProduct())
+                            .subtotal(itensPayment.getSubtotal())
+                            .build();
+
+            itensPaymentDtos.add(itensPaymentDto);
+        });
+        DeliveryAddressDto deliveryAddressDto =
+                DeliveryAddressDto.builder()
+                                    .id(deliveryAddress.getId())
+                                    .address(deliveryAddress.getAddress())
+                                    .state(deliveryAddress.getState())
+                                    .number(deliveryAddress.getNumber())
+                                    .district(deliveryAddress.getDistrict())
+                                    .build();
+        StoreDto storeDto = StoreDto.builder()
+                                    .id(store.getId())
+                                    .cnpj(store.getCnpj())
+                                    .name(store.getName())
+                                    .build();
+        ClientDto clientDto = ClientDto.builder()
+                                        .id(client.getId())
+                                        .name(client.getName())
+                                        .email(client.getEmail())
+                                        .cpf(client.getCpf())
+                                        .age(client.getAge())
+                                        .dateOfbirth(client.getDateOfBirth())
+                                        .tel(client.getTel())
+                                        .storeDto(storeDto)
+                                        .deliveryAddress(deliveryAddressDto)
+                                        .build();
+        PaymentDto paymentDto = PaymentDto.builder()
+                                            .id(payment.getId())
+                                            .payday(payment.getPayday())
+                                            .tpPayment(payment.getTpPayment())
+                                            .dsStatusPayment(payment.getDsStatusPayment())
+                                            .payTotal(payment.getPayTotal())
+                                            .build();
+        return OrderDto.builder()
+                        .id(order.getId())
+                        .dateOrder(order.getDateOrder())
+                        .client(clientDto)
+                        .itensPayments(itensPaymentDtos)
+                        .payment(paymentDto)
+                        .build();
+    }
+    public OrderDto deleteOrder(Long idOrder){
+        Order order = orderRepository.findById(idOrder)
+                .orElseThrow(() -> new HandlerEntityNotFoundException("Order not found with id " + idOrder));
+        try {
+            orderRepository.delete(order);
+
+            return new OrderDto("Delete success");
+
+        }catch (Exception ex){
+            throw new HandlerError("Unable to delete");
+        }
+    }
     private Integer productWithdrawal(Integer qtProduct,Integer stock,Product product){
 
         if (stock >= qtProduct){
